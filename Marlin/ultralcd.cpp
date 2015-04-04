@@ -231,7 +231,10 @@ static void lcd_status_screen()
 static void lcd_return_to_status()
 {
     encoderPosition = 0;
-    currentMenu = lcd_status_screen;
+    //Ryan's Mod 3/3/15 - per mildmojo - Change default screen to main menu instead of status screen
+    //The status screen updates autmatically some times and causes the print head to stutter due to processor overloading.
+    //currentMenu = lcd_status_screen;
+    currentMenu = lcd_main_menu; // <-- all menus return & time out to main menu
 }
 
 static void lcd_sdcard_pause()
@@ -1129,11 +1132,13 @@ void lcd_update()
 #endif
 
 #ifdef ULTIPANEL
-        if(timeoutToStatus < millis() && currentMenu != lcd_status_screen)
-        {
-            lcd_return_to_status();
-            lcdDrawUpdate = 2;
-        }
+// 	Ryan's edit 3/3/15 - remove redraw of status screen by commenting the section below (per mildmojo's recommendation)
+//	This creates less load on the processor to prevent stuttering of the print head when the LCD is updated.
+// 	if(timeoutToStatus < millis() && currentMenu != lcd_status_screen)
+// 	{
+// 		lcd_return_to_status();
+// 		lcdDrawUpdate = 2;
+// 	}
 #endif//ULTIPANEL
         if (lcdDrawUpdate == 2)
             lcd_implementation_clear();
