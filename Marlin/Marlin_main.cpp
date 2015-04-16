@@ -1355,22 +1355,27 @@ static void retract_z_probe() {
 /// Probe bed height at position (x,y), returns the measured z value
 static float probe_pt(float x, float y, float z_before) {
 
+float measured_z;
 
+for (int pb_count = 0; pb_count<2; pb_count++) {
   // move to right place
   do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before);
+  
+  
   do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
-
+  //This moves the probe position down 2mm quickly prior to performing z-probe routine.  It just speeds things up a little.
+  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]-7); 
 #ifdef SERVO_ENDSTOPS
   engage_z_probe();   // Engage Z Servo endstop if available
 #endif //SERVO_ENDSTOPS
  
-  delay(3000);
+  delay(2000);  //wait a little just to let the FSR readings settle
   float FSR_REF;
     // Let's take one sample reading. 
   FSR_REF = rawBedSample();
   
   run_z_probe_2(FSR_REF);
-  float measured_z = current_position[Z_AXIS];
+  measured_z = current_position[Z_AXIS];
 
 #ifdef SERVO_ENDSTOPS
   retract_z_probe();
@@ -1386,14 +1391,14 @@ static float probe_pt(float x, float y, float z_before) {
 #ifdef FSR_BED_LEVELING
   SERIAL_PROTOCOLPGM(" FSR: ");
   SERIAL_PROTOCOL(rawBedSample());
-  SERIAL_PROTOCOLPGM(" FSR_REF: "); //RYAN ADD
-  SERIAL_PROTOCOL(FSR_REF); //RYAN ADD
+  SERIAL_PROTOCOLPGM(" FSR_REF: ");
+  SERIAL_PROTOCOL(FSR_REF);
 #endif
   SERIAL_PROTOCOLPGM("\n");
+}
 
   return measured_z;
-  
-  
+    
 }
 
 #endif // #ifdef ENABLE_AUTO_BED_LEVELING
