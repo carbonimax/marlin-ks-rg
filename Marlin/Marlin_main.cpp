@@ -1047,7 +1047,7 @@ static void run_z_probe_2(float FSR_REF) {
   #ifdef FSR_BED_LEVELING
     // Probing using the FSR on the bed thermistor readings
     // feedrate = 600; //mm/min
-    feedrate = 100; //mm/min   Note: Too fast and you will "hit" the bed hard and generate vibrations
+    feedrate = 200; //mm/min   Note: Too fast and you will "hit" the bed hard and generate vibrations
     float step = 0.01;
     int direction = -1;
     while (touching_print_surface_2(FSR_REF)) {
@@ -1283,7 +1283,7 @@ static void engage_z_probe() {
     return;
     #endif
 
-    #ifdef SERVO_ENDSTOPS
+ /*    #ifdef SERVO_ENDSTOPS
     if (servo_endstops[Z_AXIS] > -1) {
 #if defined (ENABLE_AUTO_BED_LEVELING) && (PROBE_SERVO_DEACTIVATION_DELAY > 0)
         servos[servo_endstops[Z_AXIS]].attach(0);
@@ -1305,7 +1305,7 @@ static void engage_z_probe() {
     destination[X_AXIS] = 0;
     prepare_move_raw();
     st_synchronize();
-    #endif //SERVO_ENDSTOPS
+    #endif //SERVO_ENDSTOPS */
 }
 
 static void retract_z_probe() {
@@ -1314,7 +1314,7 @@ static void retract_z_probe() {
     return;
     #endif
 
-    #ifdef SERVO_ENDSTOPS
+/*     #ifdef SERVO_ENDSTOPS
     if (servo_endstops[Z_AXIS] > -1) {
 #if defined (ENABLE_AUTO_BED_LEVELING) && (PROBE_SERVO_DEACTIVATION_DELAY > 0)
         servos[servo_endstops[Z_AXIS]].attach(0);
@@ -1349,37 +1349,47 @@ static void retract_z_probe() {
     destination[Z_AXIS] = current_position[Z_AXIS] + 30;
     prepare_move_raw();
     st_synchronize();
-    #endif //SERVO_ENDSTOPS
+    #endif //SERVO_ENDSTOPS */
 }
 
 /// Probe bed height at position (x,y), returns the measured z value
 static float probe_pt(float x, float y, float z_before) {
 
 float measured_z;
+float FSR_REF;
+int pb_count_max=4;
+float pb_count_z[pb_count_max];
 
-for (int pb_count = 0; pb_count<2; pb_count++) {
+for (int pb_count = 0; pb_count<pb_count_max; pb_count++) {
   // move to right place
   do_blocking_move_to(current_position[X_AXIS], current_position[Y_AXIS], z_before);
   
   
   do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
-  //This moves the probe position down 2mm quickly prior to performing z-probe routine.  It just speeds things up a little.
+  //This moves the probe position down 7.5mm quickly prior to performing z-probe routine.  It just speeds things up a little.
   do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]-7.5); 
-#ifdef SERVO_ENDSTOPS
+/* #ifdef SERVO_ENDSTOPS
   engage_z_probe();   // Engage Z Servo endstop if available
-#endif //SERVO_ENDSTOPS
+#endif //SERVO_ENDSTOPS */
  
-  delay(500);  //wait a little just to let the FSR readings settle
-  float FSR_REF;
-    // Let's take one sample reading. 
+  delay(200);  //wait a little just to let the FSR readings settle
+  // Let's take one sample reading. 
   FSR_REF = rawBedSample();
-  
   run_z_probe_2(FSR_REF);
+  pb_count_z[pb_count]= current_position[Z_AXIS];	//save current z-probe reading to array
+  //check to see if current z-probe reading is within +- 0.03mm of previous reading, if so stop probing this point
+  if (pb_count>0) {
+	if (pb_count_z[pb_count]>pb_count_z[pb_count-1]-.03){
+		if (pb_count_z[pb_count]<pb_count_z[pb_count-1]+.03){
+		pb_count=pb_count_max;
+		}
+	}
+  }
   measured_z = current_position[Z_AXIS];
 
-#ifdef SERVO_ENDSTOPS
+/* #ifdef SERVO_ENDSTOPS
   retract_z_probe();
-#endif //SERVO_ENDSTOPS
+#endif //SERVO_ENDSTOPS */
 
   SERIAL_PROTOCOLPGM(MSG_BED);
   SERIAL_PROTOCOLPGM(" x: ");
