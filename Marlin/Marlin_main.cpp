@@ -1413,7 +1413,7 @@ for (int pb_count = 0; pb_count<pb_count_max; pb_count++) {
 	measured_z=0;
 	for (pb_count = 0; pb_count<pb_count_max; pb_count++) {
 	measured_z=measured_z + pb_count_z[pb_count]
-	{
+	}
 	measured_z=measured_z/pb_count_max;
   }
 }
