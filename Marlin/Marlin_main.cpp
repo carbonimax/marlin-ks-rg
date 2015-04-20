@@ -864,7 +864,7 @@ static void set_bed_level_equation_lsq(double *plane_equation_coefficients)
 }
 
 #else
-static void set_bed_level_equation(float z_at_xLeft_yFront, float z_at_xRight_yFront, float z_at_xLeft_yBack) {
+/* static void set_bed_level_equation(float z_at_xLeft_yFront, float z_at_xRight_yFront, float z_at_xLeft_yBack) {
     plan_bed_level_matrix.set_to_identity();
 
     vector_3 xLeftyFront = vector_3(LEFT_PROBE_BED_POSITION, FRONT_PROBE_BED_POSITION, z_at_xLeft_yFront);
@@ -897,10 +897,10 @@ static void set_bed_level_equation(float z_at_xLeft_yFront, float z_at_xRight_yF
     current_position[Z_AXIS] = zprobe_zoffset;
 
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
-}
+} */
 #endif // ACCURATE_BED_LEVELING
 
-bool touching_print_surface() {
+/* bool touching_print_surface() {
   // Original Logic:
   //    return rawBedSample() < 800; // ADC goes from 0 to 1023
   // In the original logic, it requires external circuits and such to massage
@@ -930,7 +930,7 @@ bool touching_print_surface() {
   // We _could_ add a timeout here, but I think we'll leave it for now
   return FSR_TRIGGERED; 
 }
-
+ */
 bool touching_print_surface_2(float FSR_REF)
 {
   // Original Logic:
@@ -963,7 +963,7 @@ bool touching_print_surface_2(float FSR_REF)
   return FSR_TRIGGERED; 
 }
 
-static void run_z_probe() {
+/* static void run_z_probe() {
     plan_bed_level_matrix.set_to_identity();
 
 #ifdef DELTA
@@ -1038,7 +1038,7 @@ static void run_z_probe() {
     // make sure the planner knows where we are as it may be a bit different than we last said to move to
     plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
 #endif
-}
+} */
 
 static void run_z_probe_2(float FSR_REF) {
     plan_bed_level_matrix.set_to_identity();
@@ -1118,7 +1118,7 @@ static void run_z_probe_2(float FSR_REF) {
 }
 
 
-#ifdef FSR_BED_LEVELING
+/* #ifdef FSR_BED_LEVELING
   
 void fsr_recalculate() {
   FSR_RECOVERY_THRESHOLD=0;
@@ -1229,7 +1229,7 @@ void fsr_calibration() {
 
   fsr_recalculate();
 }
-#endif
+#endif */
 
 static void do_blocking_move_to(float x, float y, float z) {
     float oldFeedRate = feedrate;
@@ -1364,12 +1364,12 @@ for (int pb_count = 0; pb_count<2; pb_count++) {
   
   do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]);
   //This moves the probe position down 2mm quickly prior to performing z-probe routine.  It just speeds things up a little.
-  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]-7); 
+  do_blocking_move_to(x - X_PROBE_OFFSET_FROM_EXTRUDER, y - Y_PROBE_OFFSET_FROM_EXTRUDER, current_position[Z_AXIS]-7.5); 
 #ifdef SERVO_ENDSTOPS
   engage_z_probe();   // Engage Z Servo endstop if available
 #endif //SERVO_ENDSTOPS
  
-  delay(2000);  //wait a little just to let the FSR readings settle
+  delay(500);  //wait a little just to let the FSR readings settle
   float FSR_REF;
     // Let's take one sample reading. 
   FSR_REF = rawBedSample();
@@ -1393,6 +1393,8 @@ for (int pb_count = 0; pb_count<2; pb_count++) {
   SERIAL_PROTOCOL(rawBedSample());
   SERIAL_PROTOCOLPGM(" FSR_REF: ");
   SERIAL_PROTOCOL(FSR_REF);
+  SERIAL_PROTOCOLPGM(" Count: ");
+  SERIAL_PROTOCOL(pb_count);
 #endif
   SERIAL_PROTOCOLPGM("\n");
 }
@@ -1842,10 +1844,10 @@ void process_commands()
       previous_millis_cmd = millis();
       endstops_hit_on_purpose();
 
-#ifdef FSR_BED_LEVELING
+/* #ifdef FSR_BED_LEVELING
       delay(1500); // Need to wait for vibrations and ADC(s) to settle
       fsr_calibration(); // Let's calibrate then.
-#endif
+#endif */
       break;
 
 #ifdef ENABLE_AUTO_BED_LEVELING
@@ -1863,26 +1865,26 @@ void process_commands()
 
           #ifdef NONLINEAR_BED_LEVELING
             reset_bed_level();
-          #else
+          /* #else
             vector_3 uncorrected_position = plan_get_position();
             //uncorrected_position.debug("position durring G29");
             current_position[X_AXIS] = uncorrected_position.x;
             current_position[Y_AXIS] = uncorrected_position.y;
             current_position[Z_AXIS] = uncorrected_position.z;
-            plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
+            plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]); */
           #endif //NONLINEAR_BED_LEVELING
 
-          #ifndef SERVO_ENDSTOPS
+/*           #ifndef SERVO_ENDSTOPS
             engage_z_probe();   // Engage Z probe by moving the end effector.
-          #endif //SERVO_ENDSTOPS
+          #endif //SERVO_ENDSTOPS */
 
-          #ifdef FSR_BED_LEVELING
+/*           #ifdef FSR_BED_LEVELING
             #ifdef FSR_CALIBRATE_EVERY_G29
             delay(1500); // Let's let the system settle. Otherwise, the readings will be messed up.
             fsr_calibration(); // Initiate calibration of the FSR sensors. Note, involves z axis movement. 
                                // Should return to position before calibration.
             #endif
-          #endif
+          #endif */
 
             setup_for_endstop_move();
 
@@ -1957,7 +1959,7 @@ void process_commands()
           #ifdef NONLINEAR_BED_LEVELING
             extrapolate_unprobed_bed_level();
             print_bed_level();
-          #else
+/*           #else
             // solve lsq problem
             double *plane_equation_coefficients = qr_solve(ACCURATE_BED_LEVELING_POINTS*ACCURATE_BED_LEVELING_POINTS, 3, eqnAMatrix, eqnBVector);
 
@@ -1971,10 +1973,10 @@ void process_commands()
 
             set_bed_level_equation_lsq(plane_equation_coefficients);
 
-            free(plane_equation_coefficients);
+            free(plane_equation_coefficients); */
           #endif //NONLINEAR_BED_LEVELING
 
-#else // ACCURATE_BED_LEVELING not defined
+/* #else // ACCURATE_BED_LEVELING not defined
 
 
             // prob 1
@@ -1990,7 +1992,7 @@ void process_commands()
 
             set_bed_level_equation(z_at_xLeft_yFront, z_at_xRight_yFront, z_at_xLeft_yBack);
 
-
+ */
 #endif // ACCURATE_BED_LEVELING
             do_blocking_move_to(MANUAL_X_HOME_POS, MANUAL_Y_HOME_POS, Z_RAISE_AFTER_PROBING);
             st_synchronize();
@@ -2025,7 +2027,7 @@ void process_commands()
 
             feedrate = homing_feedrate[Z_AXIS];
 
-            run_z_probe();
+/*              run_z_probe();  */
             SERIAL_PROTOCOLPGM(MSG_BED);
             SERIAL_PROTOCOLPGM(" X: ");
             SERIAL_PROTOCOL(current_position[X_AXIS]);
@@ -2776,7 +2778,7 @@ void process_commands()
       break;
     #endif
 
-    #ifdef FSR_BED_LEVELING
+/*     #ifdef FSR_BED_LEVELING
     case 777: // M777 fsr calibration use commands/options
       SERIAL_ECHO_START;
       SERIAL_ECHOLNPGM(" ");
@@ -2849,7 +2851,7 @@ void process_commands()
 
       break;
     #endif
-
+ */
     #ifdef FWRETRACT
     case 207: //M207 - set retract length S[positive mm] F[feedrate mm/sec] Z[additional zlift/hop]
     {
