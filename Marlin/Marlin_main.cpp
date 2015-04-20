@@ -1407,6 +1407,15 @@ for (int pb_count = 0; pb_count<pb_count_max; pb_count++) {
   SERIAL_PROTOCOL(pb_count);
 #endif
   SERIAL_PROTOCOLPGM("\n");
+  
+  //if maximum number of probes were completed, use the average of all probes.
+  if (pb_count != pb_count_max){  //pb_count is set equal to pb_count_max only if tolerances are met.
+	measured_z=0;
+	for (pb_count = 0; pb_count<pb_count_max; pb_count++) {
+	measured_z=measured_z + pb_count_z[pb_count]
+	{
+	measured_z=measured_z/pb_count_max;
+  }
 }
 
   return measured_z;
