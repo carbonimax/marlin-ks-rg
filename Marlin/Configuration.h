@@ -109,7 +109,7 @@
  #define DELTA_DIAGONAL_ROD 255.0 // mm
 
 // Horizontal offset from middle of printer to smooth rod center.
- #define DELTA_SMOOTH_ROD_OFFSET 184.9 // mm
+ #define DELTA_SMOOTH_ROD_OFFSET 184.4 // mm  Ryan changed from 184.9 to 184.4
 
 // Horizontal offset of the universal joints on the end effector.
 #define DELTA_EFFECTOR_OFFSET 19.94 // mm
@@ -387,7 +387,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #ifdef ENABLE_AUTO_BED_LEVELING
 
   // these are the positions on the bed to do the probing
-  #define DELTA_PROBABLE_RADIUS (DELTA_PRINTABLE_RADIUS-10)
+  #define DELTA_PROBABLE_RADIUS (DELTA_PRINTABLE_RADIUS-50)
   #define LEFT_PROBE_BED_POSITION -DELTA_PROBABLE_RADIUS
   #define RIGHT_PROBE_BED_POSITION DELTA_PROBABLE_RADIUS
   #define BACK_PROBE_BED_POSITION DELTA_PROBABLE_RADIUS
@@ -396,7 +396,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   // these are the offsets to the probe relative to the extruder tip (Hotend - Probe)
   #define X_PROBE_OFFSET_FROM_EXTRUDER 0.0
   #define Y_PROBE_OFFSET_FROM_EXTRUDER 0.0
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER 0.1  // Increase this if the first layer is too thin.
+  #define Z_PROBE_OFFSET_FROM_EXTRUDER 0.2  // Increase this if the first layer is too thin.
 
   #define Z_RAISE_BEFORE_HOMING 10       // (in mm) Raise Z before homing (G28) for Probe Clearance.
                                         // Be sure you have this distance over your Z_MAX_POS in case
@@ -438,7 +438,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   #define ACCURATE_BED_LEVELING
 
   #ifdef ACCURATE_BED_LEVELING
-    #define ACCURATE_BED_LEVELING_POINTS 7
+    #define ACCURATE_BED_LEVELING_POINTS 5
     #define ACCURATE_BED_LEVELING_GRID_X ((RIGHT_PROBE_BED_POSITION - LEFT_PROBE_BED_POSITION) / (ACCURATE_BED_LEVELING_POINTS - 1))
     #define ACCURATE_BED_LEVELING_GRID_Y ((BACK_PROBE_BED_POSITION - FRONT_PROBE_BED_POSITION) / (ACCURATE_BED_LEVELING_POINTS - 1))
 
@@ -464,8 +464,8 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // For deltabots this means top and center of the Cartesian print volume.
 #define MANUAL_X_HOME_POS 0
 #define MANUAL_Y_HOME_POS 0
-//Ryan changed z from 338.0 to 337.0
-#define MANUAL_Z_HOME_POS 337.0 // For delta: Distance between nozzle and print surface after homing.
+//Ryan changed z from 338.0 to 339.8 after changing to glass build plate
+#define MANUAL_Z_HOME_POS 339.8 // For delta: Distance between nozzle and print surface after homing.
 
 //// MOVEMENT SETTINGS
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
