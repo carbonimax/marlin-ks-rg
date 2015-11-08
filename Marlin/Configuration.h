@@ -16,7 +16,7 @@
 // startup. Implementation of an idea by Prof Braino to inform user that any changes made to this
 // build by the user have been successfully uploaded into firmware.
 #define STRING_VERSION_CONFIG_H __DATE__ " " __TIME__ // build date and time
-#define STRING_CONFIG_H_AUTHOR "(Shai, Deltaprintr)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "(Deltaprintr)" // Who made the changes.
 
 // SERIAL_PORT selects which serial port should be used for communication with the host.
 // This allows the connection of wireless adapters (for instance) to non-default port pins.
@@ -106,10 +106,10 @@
 #define DELTA_SEGMENTS_PER_SECOND 200
 
 // Center-to-center distance of the holes in the diagonal push rods.
- #define DELTA_DIAGONAL_ROD 255.0 // mm
+ #define DELTA_DIAGONAL_ROD 200.0 // mm
 
 // Horizontal offset from middle of printer to smooth rod center.
- #define DELTA_SMOOTH_ROD_OFFSET 184.4 // mm  Ryan changed from 184.9 to 184.4
+ #define DELTA_SMOOTH_ROD_OFFSET 149.9 // mm  Ryan changed from 184.9 to 184.4
 
 // Horizontal offset of the universal joints on the end effector.
 #define DELTA_EFFECTOR_OFFSET 19.94 // mm
@@ -121,7 +121,7 @@
 #define DELTA_RADIUS (DELTA_SMOOTH_ROD_OFFSET-DELTA_EFFECTOR_OFFSET-DELTA_CARRIAGE_OFFSET)
 
 // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
- #define DELTA_PRINTABLE_RADIUS 127.0
+ #define DELTA_PRINTABLE_RADIUS 88.9
 
 
 // Effective X/Y positions of the three vertical towers.
@@ -401,7 +401,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
   #define Z_RAISE_BEFORE_HOMING 10       // (in mm) Raise Z before homing (G28) for Probe Clearance.
                                         // Be sure you have this distance over your Z_MAX_POS in case
 
-  #define XY_TRAVEL_SPEED 7000         // X and Y axis travel speed between probes, in mm/min
+  #define XY_TRAVEL_SPEED 8000         // X and Y axis travel speed between probes, in mm/min
 
     //DO NOT SET THE NEXT VALUES BELOW 10 RIGHT NOW OR THE HEAD MAY CRASH ON G29
   #define Z_RAISE_BEFORE_PROBING 10  //How much the extruder will be raised before traveling to the first probing point.
@@ -465,7 +465,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #define MANUAL_X_HOME_POS 0
 #define MANUAL_Y_HOME_POS 0
 //Ryan changed z from 338.0 to 339.8 after changing to glass build plate
-#define MANUAL_Z_HOME_POS 339.8 // For delta: Distance between nozzle and print surface after homing.
+#define MANUAL_Z_HOME_POS 267.0 // For delta: Distance between nozzle and print surface after homing.
 
 //// MOVEMENT SETTINGS
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
